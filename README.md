@@ -1,23 +1,34 @@
 # Accel Biz in 10 Minutes
 
-A clickable prototype of a mobile app where a small office is **advised, priced, verified and tracked in about 10 minutes**, with a person stepping in only when needed.
+A prototype mobile app where a small office is **advised, priced, verified and tracked in about 10 minutes**, with a person stepping in only when needed.
 
-> All data is synthetic. Registries, payment, billing, consent logging and encryption are simulated.
+> All data is synthetic. Registries, payment, billing and consent logging are simulated.
 
-## The idea
+## The problem
 
-Small offices are rarely lost on price. They drop off at "not now" moments: they can't be reached, have no time for a visit, get a slow quote, hit paperwork delays, or face install and payment slips. Today this takes about 17.6 days and 3 chase calls from first contact to go-live.
+Small offices are rarely lost on price. In a sample of 5,000 leads, only 13% left over price or a cheaper rival, while 59% dropped off at five "not now" moments: couldn't be reached, no time for a visit, slow or confusing quote, paperwork delays, and install or payment slips. Today that means about 17.6 days and 3 chase calls from first contact to go-live.
 
-Accel Biz moves the whole journey into one phone app.
+## The solution
 
-1. **Advise:** answer 4 quick questions, or type a sentence
-2. **Price:** see one monthly price and toggle add-ons
-3. **Agree:** give consent
-4. **Verify:** photograph documents; the app checks them and names the exact fix
-5. **Pay:** confirm and pay in the same sitting
-6. **Track:** follow live order status
+One phone app that handles the whole journey:
+
+1. **Advise:** the owner answers 4 quick questions or types a sentence, and the app picks a bundle
+2. **Price:** one monthly price in plain words, with add-ons
+3. **Agree:** consent is shown and accepted before any document is taken
+4. **Verify:** the owner photographs documents; the app checks them and names the exact fix if something fails
+5. **Pay:** the owner pays in the same sitting and the install is booked
+6. **Track:** live order status, with a person available if the owner is stuck
 
 **Target:** a first order in about 10 minutes.
+
+## Key features
+
+- **Rules-based advisor:** a rules engine picks the bundle from the product catalogue, so every bundle follows catalogue rules
+- **Free-text advisor:** the owner can type a sentence instead of tapping; an AI model fills in the same answers, with an offline keyword reader as fallback
+- **Automated document checks:** GSTIN lookup, name match, image sharpness, address-proof age and a required-documents checklist
+- **Human hand-off:** a field agent takes over when a document fails twice, an order stalls, a GST-only add-on is chosen without GST, or the owner asks for help. The case arrives pre-filled
+- **Multilingual:** English, Hindi, Marathi and Tamil
+- **Pilot metrics dashboard:** conversion, time to order, hand-offs and cost per customer, computed live
 
 ## Bundles
 
@@ -26,31 +37,6 @@ Accel Biz moves the whole journey into one phone app.
 | Office Lite | up to 8 | ₹2,222 |
 | Office Standard | 9 to 15 | ₹4,337 |
 | Office Plus | 16+ | ₹10,775 |
-
-## Run it
-
-No build step or dependencies.
-
-```bash
-git clone https://github.com/Harshio1/Accel-biz.git
-cd Accel-biz
-python -m http.server 8000
-```
-
-Open http://localhost:8000, or just double-click `index.html`.
-
-## Try the demo
-
-Pick an applicant in the left panel:
-
-- **K03:** everything passes first time
-- **K07:** name mismatch, fails twice, handed to a person
-- **K04:** blurry photo, fixed on re-upload
-- **K11:** old electricity bill, fixed on re-upload
-
-## Optional AI advisor
-
-Typing a sentence works offline with a basic keyword reader. For the AI version, paste a free Google Gemini key (from aistudio.google.com) or an Anthropic key in the left panel. The key stays in your browser tab only. Only the typed text is sent, so don't type phone or ID numbers.
 
 ## Files
 
