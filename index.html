@@ -1,0 +1,335 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Accel Biz in 10 minutes – prototype</title>
+<style>
+:root{--red:#e40000;--dk:#1f2937;--gr:#6b7280;--tint:#fdecea;--ln:#e5e7eb;--ok:#15803d;--bad:#b91c1c}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eceef1;color:var(--dk);display:flex;gap:28px;justify-content:center;align-items:flex-start;padding:12px;min-height:100vh}
+#side{width:250px;font-size:13px;padding-top:8px}#side h3{margin:0 0 4px;font-size:15px}#side p{color:var(--gr);margin:0 0 10px}
+.sc{display:block;width:100%;text-align:left;border:1px solid var(--ln);background:#fff;border-radius:10px;padding:7px 10px;margin-bottom:6px;cursor:pointer;font-size:12.5px}
+.sc b{display:block}.sc span{color:var(--gr);font-size:11.5px}.sc.on{border-color:var(--red);background:var(--tint)}
+#stats{background:#fff;border-radius:10px;padding:10px;margin-top:10px;border:1px solid var(--ln)}#stats div{display:flex;justify-content:space-between;padding:2px 0}
+#wrap{width:390px;flex:none}#phone{width:390px;height:844px;background:#111;border-radius:48px;padding:10px;transform-origin:top left;box-shadow:0 20px 50px #0004}
+#scr{position:relative;background:#fff;border-radius:38px;height:100%;overflow:hidden;display:flex;flex-direction:column}
+#sb{height:34px;padding:10px 24px 0;display:flex;justify-content:space-between;font-size:12px;font-weight:bold;flex:none}
+#top{padding:6px 16px 8px;flex:none}#top .r{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--gr)}
+#bar{height:4px;background:var(--ln);border-radius:4px;margin-top:6px}#bar i{display:block;height:4px;background:var(--red);border-radius:4px;transition:.3s}
+#body{flex:1;overflow:auto;padding:6px 16px 16px}#foot{padding:10px 16px 18px;flex:none;border-top:1px solid var(--ln)}
+h1{font-size:21px;margin:6px 0}h2{font-size:17px;margin:4px 0 8px}.m{color:var(--gr);font-size:13px}
+.btn{width:100%;border:0;background:var(--red);color:#fff;font-weight:bold;font-size:15px;padding:13px;border-radius:12px;cursor:pointer}.btn:disabled{background:#d1d5db}
+.btn.o{background:#fff;color:var(--red);border:1.5px solid var(--red)}.lnk{background:none;border:0;color:var(--red);font-size:13px;cursor:pointer;padding:8px;width:100%}
+.b{max-width:85%;padding:9px 12px;border-radius:14px;margin:6px 0;font-size:14px;line-height:1.35}.b.a{background:#f3f4f6}.b.u{background:var(--red);color:#fff;margin-left:auto}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.chip{border:1.5px solid var(--ln);background:#fff;border-radius:20px;padding:8px 12px;font-size:13px;cursor:pointer}.chip.sug{border-color:#fca5a5}.chip.sug:after{content:" •";color:var(--red)}
+.card{border:1px solid var(--ln);border-radius:14px;padding:12px;margin:8px 0}.card.t{background:var(--tint);border-color:#f8b4ad}
+.big{font-size:34px;font-weight:bold;color:var(--red)}.row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13.5px}
+.tg{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--ln);font-size:13px}.tg:first-of-type{border:0}.sw{width:40px;height:22px;border-radius:12px;background:#d1d5db;position:relative;cursor:pointer;flex:none}.sw:after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--red)}.sw.on:after{left:20px}.sw.lk{opacity:.4;cursor:not-allowed}
+.docs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.doc{border:1px solid var(--ln);border-radius:10px;padding:5px;font-size:11.5px;text-align:center;height:118px;overflow:hidden}.doc img{width:100%;height:84px;object-fit:cover;object-position:top;border-radius:6px;display:block;margin-bottom:3px}.doc.x{display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--bad);font-weight:bold}
+.ck{display:flex;gap:8px;padding:6px 0;font-size:13px;align-items:flex-start}.ck i{font-style:normal;font-weight:bold;width:18px;flex:none}.ck.ok i{color:var(--ok)}.ck.no i{color:var(--bad)}.ck.wn i{color:#b45309}.ck small{display:block;color:var(--gr)}.ck.no small{color:var(--bad)}
+.tl{border-left:3px solid var(--ln);margin:10px 0 10px 10px;padding-left:16px}.st{position:relative;padding:0 0 16px;font-size:14px;color:var(--gr)}.st:before{content:"";position:absolute;left:-24px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--ln)}.st.d{color:var(--dk)}.st.d:before{background:var(--ok);border-color:var(--ok)}.st.c:before{border-color:var(--red)}
+.wa{background:#dcf8c6;border-radius:12px;padding:10px;font-size:13px;margin:8px 0}
+#sheet{position:absolute;inset:0;background:#0006;display:none;align-items:flex-end}#sheet>div{background:#fff;width:100%;max-height:88%;overflow:auto;border-radius:24px 24px 0 0;padding:18px 16px 22px}
+.pill{display:inline-block;font-size:11px;border-radius:10px;padding:2px 8px;background:#e5e7eb}.sp{height:8px}
+#mx{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:9}#mx>div{background:#fff;border-radius:16px;width:min(760px,94vw);max-height:92vh;overflow:auto;padding:18px 20px}
+#mx table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 12px}#mx th,#mx td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--ln)}#mx th{color:var(--gr);font-weight:normal;font-size:12px}
+.kp{display:flex;gap:8px;flex-wrap:wrap}.kp>div{flex:1;min-width:120px;border:1px solid var(--ln);border-radius:10px;padding:8px}.kp b{display:block;font-size:20px;color:var(--red)}
+#side input[type=password],#side input[type=number]{width:100%;padding:6px;border:1px solid var(--ln);border-radius:8px;font-size:12px;margin-bottom:6px}
+.sb{display:block;width:100%;border:1px solid var(--ln);background:#fff;border-radius:8px;padding:6px;font-size:12px;cursor:pointer;margin-bottom:6px}
+.ai{flex:1;padding:9px;border:1px solid var(--ln);border-radius:10px;margin-right:6px;font-size:13px}.lg{font-size:11.5px;color:var(--gr);display:block;margin-top:4px}
+</style></head><body>
+<div id="side"><h3>Demo controls</h3><p>Pick an applicant (real case data, K01–K12). Starts a fresh journey.</p><div id="scs"></div>
+<div id="stats"><div><span>Time in app</span><b id="tm">00:00</b></div><div><span>Taps</span><b id="tp">0</b></div><div><span>Chase calls needed</span><b><span id="cc">0</span> <small style="color:#6b7280">(today ~3)</small></b></div><div><span>Days to order</span><b><span id="dy">–</span> <small style="color:#6b7280">(today 17.6)</small></b></div></div>
+<button class="sb" style="margin-top:10px" onclick="showM()">📊 Pilot metrics</button>
+<h3 style="margin-top:12px">AI advisor</h3><select id="prv" class="sb" onchange="setProv(this.value)"><option value="gemini">Google Gemini (free key)</option><option value="claude">Anthropic Claude</option></select><input type="password" id="key" placeholder="API key (optional)" autocomplete="off" onchange="setKey(this.value)"><input type="text" id="mdl" style="width:100%;padding:6px;border:1px solid var(--ln);border-radius:8px;font-size:12px;margin-bottom:6px" placeholder="model name"><p style="margin:0 0 8px;font-size:11.5px">GenAI path: needs internet and a key. Gemini keys are free from aistudio.google.com (rate-limited). Without a key, or if the call fails, a free offline keyword reader fills the answers (English only, not GenAI). Keys stay in this browser tab only.</p>
+<h3>Hand-off tests</h3><label style="font-size:12px">Stalled-order timer (seconds)</label><input type="number" id="stl" value="120" min="5" onchange="STALL=Math.max(5,+this.value||120)"><button class="sb" onclick="if(S&&S.t0&&!S.paid)help('stall')">Simulate stalled order</button>
+<p style="margin-top:10px;font-size:11.5px">Red dots on chips are demo hints for the chosen applicant. All data is synthetic; registries, payment and billing are mocked.</p></div>
+<div id="wrap"><div id="phone"><div id="scr"><div id="sb"><span id="clk">9:41</span><span>5G ▮▮▮</span></div><div id="top"></div><div id="body"></div><div id="foot"></div><div id="sheet"><div id="sh"></div></div></div></div></div>
+<div id="mx" onclick="if(event.target==this)this.style.display='none'"><div id="mxb"></div></div>
+<script src="data.js"></script>
+<script>
+const D=DATA,TODAY=new Date('2026-07-15'),$=id=>document.getElementById(id),R=n=>'₹'+n.toLocaleString('en-IN');
+const TAGS={K01:'GST cancelled',K02:'Tilted GST photo',K03:'Happy path',K04:'Blurry GST photo',K05:'Udyam missing',K06:'GSTIN digit wrong',K07:'Name mismatch',K08:'Clean',K09:'Clean',K10:'Clean',K11:'Bill 257 days old',K12:'Clean'};
+const LI={en:0,hi:1,mr:2,ta:3},LOC=['en-IN','hi-IN','mr-IN','ta-IN'];
+const LANGS=[['en','English'],['hi','हिन्दी'],['mr','मराठी'],['ta','தமிழ்'],['kn','ಕನ್ನಡ'],['gu','ગુજરાતી'],['te','తెలుగు'],['bn','বাংলা'],['pa','ਪੰਜਾਬੀ'],['ml','മലയാളം']];
+const K={
+step:'Step {0} of 6|चरण {0} / 6|पायरी {0} / 6|படி {0} / 6',
+t10:'in 10 minutes|10 मिनट में|१० मिनिटांत|10 நிமிடத்தில்',
+wel:'{0}, welcome. Opened from a referral link for {1}.|{0}, स्वागत है। {1} के लिए रेफ़रल लिंक से खोला गया।|{0}, स्वागत आहे. {1} साठी रेफरल लिंकवरून उघडले.|{0}, வரவேற்கிறோம். {1}க்கான பரிந்துரை இணைப்பிலிருந்து திறக்கப்பட்டது.',
+hi:'Hi! Four quick questions and you get your plan and price.|नमस्ते! 4 सवालों में आपका सही प्लान और कीमत।|नमस्कार! ४ प्रश्नांत तुमचा योग्य प्लॅन आणि किंमत.|வணக்கம்! 4 கேள்விகளில் உங்கள் திட்டமும் விலையும்.',
+nov:'No visit, no paperwork pile. Plan, price, documents and order, all on your phone.|कोई विज़िट नहीं, कागज़ों का ढेर नहीं। प्लान, कीमत, दस्तावेज़ और ऑर्डर, सब फ़ोन पर।|भेट नाही, कागदपत्रांचा गोंधळ नाही. प्लॅन, किंमत, कागदपत्रे आणि ऑर्डर, सगळे फोनवर.|நேரில் வருகை இல்லை, காகிதக் குவியல் இல்லை. திட்டம், விலை, ஆவணங்கள், ஆர்டர் எல்லாம் உங்கள் போனில்.',
+go:'Start|शुरू करें|सुरू करा|தொடங்கவும்',
+soon:'{0} is coming soon. Available after the pilot.|{0} जल्द आ रहा है। पायलट के बाद उपलब्ध।|{0} लवकरच येत आहे. पायलटनंतर उपलब्ध.|{0} விரைவில் வருகிறது. பைலட்டுக்குப் பிறகு கிடைக்கும்.',
+sb:'soon|जल्द|लवकरच|விரைவில்',
+lnm:'English|हिन्दी|मराठी|தமிழ்',
+adv:'Your advisor|आपका सलाहकार|तुमचा सल्लागार|உங்கள் ஆலோசகர்',
+q0:'What kind of business is it?|आपका बिज़नेस किस तरह का है?|तुमचा व्यवसाय कोणत्या प्रकारचा आहे?|உங்கள் தொழில் என்ன வகை?',
+q1:'How many people work there?|कितने कर्मचारी हैं?|किती कर्मचारी आहेत?|எத்தனை ஊழியர்கள்?',
+q2:'How many phone numbers do you need?|कितने फ़ोन नंबर चाहिए?|किती फोन नंबर हवेत?|எத்தனை ஃபோன் எண்கள் தேவை?',
+q3:'Do you have a GST number?|क्या आपके पास GST है?|तुमच्याकडे GST आहे का?|உங்களிடம் GST உள்ளதா?',
+o0a:'Clinic / health|क्लिनिक / स्वास्थ्य|क्लिनिक / आरोग्य|கிளினிக் / சுகாதாரம்',o0b:'CA / law / consulting|सीए / कानून / सलाह|सीए / कायदा / सल्ला|CA / சட்டம் / ஆலோசனை',o0c:'Realty / insurance / travel|रियल एस्टेट / बीमा / ट्रैवल|रिअल इस्टेट / विमा / प्रवास|ரியல் எஸ்டேட் / காப்பீடு / பயணம்',o0d:'Shop / retail|दुकान / रिटेल|दुकान / रिटेल|கடை / சில்லறை',o0e:'Factory / workshop|फ़ैक्टरी / वर्कशॉप|कारखाना / वर्कशॉप|தொழிற்சாலை / பணிமனை',
+o1a:'1–8 people|1–8 लोग|१–८ लोक|1–8 பேர்',o1b:'9–15 people|9–15 लोग|९–१५ लोक|9–15 பேர்',o1c:'16+ people|16+ लोग|१६+ लोक|16+ பேர்',
+o2a:'1',o2b:'2',o2c:'3+',o3a:'Yes|हाँ|हो|ஆம்',o3b:'No|नहीं|नाही|இல்லை',o3c:'Not sure|पक्का नहीं|माहीत नाही|உறுதியில்லை',
+best:'Best fit: {0}. Here is why:|सबसे उपयुक्त: {0}। कारण यह है:|सर्वोत्तम पर्याय: {0}. कारण असे:|சிறந்த பொருத்தம்: {0}. காரணம்:',
+see:'See my price|मेरी कीमत देखें|माझी किंमत पाहा|என் விலையைப் பார்க்க',
+w1g:'Gigabit speed for 16+ people (needs GST, Tier 1 city)|16+ लोगों के लिए गीगाबिट स्पीड (GST और टियर 1 शहर ज़रूरी)|१६+ लोकांसाठी गिगाबिट स्पीड (GST आणि टियर 1 शहर आवश्यक)|16+ பேருக்கு ஜிகாபிட் வேகம் (GST மற்றும் டையர் 1 நகரம் தேவை)',
+w1h:'Fast fibre for a busy office|व्यस्त ऑफ़िस के लिए तेज़ फ़ाइबर|व्यस्त ऑफिससाठी वेगवान फायबर|பரபரப்பான அலுவலகத்திற்கு வேகமான ஃபைபர்',
+w1t:'Fast fibre for a busy office (1 Gbps is not sold in Tier 2)|व्यस्त ऑफ़िस के लिए तेज़ फ़ाइबर (1 Gbps टियर 2 में उपलब्ध नहीं)|व्यस्त ऑफिससाठी वेगवान फायबर (१ Gbps टियर 2 मध्ये उपलब्ध नाही)|பரபரப்பான அலுவலகத்திற்கு வேகமான ஃபைபர் (1 Gbps டையர் 2ல் இல்லை)',
+w2p:'Premium business lines, one per key person|प्रमुख व्यक्तियों के लिए प्रीमियम बिज़नेस लाइनें|प्रमुख व्यक्तींसाठी प्रीमियम बिझनेस लाइन|முக்கிய நபர்களுக்கு பிரீமியம் வணிக இணைப்புகள்',
+w3a:'300 Mbps for 9–15 people|9–15 लोगों के लिए 300 Mbps|९–१५ लोकांसाठी 300 Mbps|9–15 பேருக்கு 300 Mbps',
+w3b:'100 Mbps is plenty for up to 8 people|8 लोगों तक के लिए 100 Mbps काफ़ी है|८ लोकांपर्यंत 100 Mbps पुरेसे आहे|8 பேர் வரை 100 Mbps போதும்',
+w4:'Business lines on one bill|एक ही बिल में बिज़नेस लाइनें|एकाच बिलात बिझनेस लाइन|ஒரே பில்லில் வணிக இணைப்புகள்',
+w5:'Business email with your own domain, {0} users|अपने डोमेन के साथ बिज़नेस ईमेल, {0} यूज़र|तुमच्या डोमेनसह बिझनेस ईमेल, {0} यूजर|உங்கள் டொமைனுடன் வணிக மின்னஞ்சல், {0} பயனர்கள்',
+w6:'Antivirus on every work device|हर वर्क डिवाइस पर एंटीवायरस|प्रत्येक वर्क डिव्हाइसवर अँटीव्हायरस|ஒவ்வொரு பணி சாதனத்திலும் ஆன்டிவைரஸ்',
+w7:'1 TB cloud backup for client files|क्लाइंट फ़ाइलों के लिए 1 TB क्लाउड बैकअप|क्लायंट फाइलींसाठी 1 TB क्लाउड बॅकअप|கிளையன்ட் கோப்புகளுக்கு 1 TB கிளவுட் காப்புப்பிரதி',
+mo:'/month|/माह|/महिना|/மாதம்',
+pr1:'One price. 12-month contract. {0} setup.|एक कीमत। 12 महीने का अनुबंध। सेटअप {0}।|एकच किंमत. १२ महिन्यांचा करार. सेटअप {0}.|ஒரே விலை. 12 மாத ஒப்பந்தம். செட்அப் {0}.',
+spend:'You spend about {0}/month on telecom today.|आप आज टेलीकॉम पर लगभग {0}/माह खर्च करते हैं।|तुम्ही आज टेलिकॉमवर सुमारे {0}/महिना खर्च करता.|இன்று நீங்கள் டெலிகாமுக்கு மாதம் சுமார் {0} செலவிடுகிறீர்கள்.',
+more:'This is {0} more, and it adds email, security and one bill, so it is a value case, not only a price case.|यह {0} ज़्यादा है, पर इसमें ईमेल, सुरक्षा और एक ही बिल शामिल है, यानी सिर्फ़ कीमत नहीं, पूरा फ़ायदा।|हे {0} जास्त आहे, पण त्यात ईमेल, सुरक्षा आणि एकच बिल आहे, म्हणजे फक्त किंमत नाही, पूर्ण फायदा.|இது {0} அதிகம், ஆனால் மின்னஞ்சல், பாதுகாப்பு, ஒரே பில் அடங்கும்; விலை மட்டுமல்ல, மதிப்பும் கிடைக்கும்.',
+less:'This is {0} less than today.|यह आज से {0} कम है।|हे आजपेक्षा {0} कमी आहे.|இது இன்றை விட {0} குறைவு.',
+adds:'Add-ons|ऐड-ऑन|ॲड-ऑन|கூடுதல் வசதிகள்',
+lock:'🔒 unlocks once GST is verified|🔒 GST सत्यापित होने पर खुलेगा|🔒 GST पडताळल्यावर खुले होईल|🔒 GST சரிபார்த்ததும் திறக்கும்',
+su:'setup|सेटअप|सेटअप|செட்அப்',
+big16:'16+ people: a specialist will also call to confirm installation. Your order still goes through on your phone.|16+ लोग: इंस्टॉलेशन पक्का करने के लिए एक विशेषज्ञ भी कॉल करेगा। आपका ऑर्डर फ़ोन पर ही पूरा होगा।|१६+ लोक: इन्स्टॉलेशन निश्चित करण्यासाठी तज्ज्ञ कॉल करेल. तुमची ऑर्डर फोनवरच पूर्ण होईल.|16+ பேர்: நிறுவலை உறுதிப்படுத்த நிபுணர் அழைப்பார். உங்கள் ஆர்டர் போனிலேயே முடியும்.',
+cont:'Continue|आगे बढ़ें|पुढे जा|தொடரவும்',
+aP17:'Cloud Backup 1 TB|क्लाउड बैकअप 1 TB|क्लाउड बॅकअप 1 TB|கிளவுட் காப்புப்பிரதி 1 TB',aP11:'Static IP|स्टैटिक IP|स्टॅटिक IP|நிலையான IP',aP09:'Failover router|फ़ेलओवर राउटर|फेलओव्हर राउटर|ஃபெயில்ஓவர் ரவுட்டர்',aP22:'Secure Wi-Fi + guest|सुरक्षित Wi-Fi + गेस्ट|सुरक्षित Wi-Fi + गेस्ट|பாதுகாப்பான Wi-Fi + விருந்தினர்',aP18:'Website + domain|वेबसाइट + डोमेन|वेबसाइट + डोमेन|இணையதளம் + டொமைன்',aP15:'WhatsApp Business|WhatsApp बिज़नेस|WhatsApp बिझनेस|WhatsApp Business',aP14:'Business SMS 10k|बिज़नेस SMS 10k|बिझनेस SMS 10k|Business SMS 10k',aP13:'Toll-free number|टोल-फ़्री नंबर|टोल-फ्री नंबर|கட்டணமில்லா எண்',aP21:'Managed Firewall|मैनेज्ड फ़ायरवॉल|मॅनेज्ड फायरवॉल|நிர்வகிக்கப்படும் ஃபயர்வால்',
+ch:'Before we check your documents|दस्तावेज़ जाँचने से पहले|कागदपत्रे तपासण्यापूर्वी|ஆவணங்களைச் சரிபார்க்கும் முன்',
+c1t:'What we use|हम क्या उपयोग करते हैं|आम्ही काय वापरतो|நாங்கள் பயன்படுத்துவது',
+c1:'Your GST and Udyam certificates, ID and address proof, only to verify this business and create your order.|आपके GST और उद्यम प्रमाणपत्र, पहचान और पते का प्रमाण, केवल इस बिज़नेस को सत्यापित करने और आपका ऑर्डर बनाने के लिए।|तुमचे GST आणि उद्यम प्रमाणपत्र, ओळख आणि पत्त्याचा पुरावा, फक्त हा व्यवसाय पडताळण्यासाठी आणि ऑर्डर तयार करण्यासाठी.|உங்கள் GST, உத்யம் சான்றிதழ்கள், அடையாளம் மற்றும் முகவரிச் சான்று, இந்த வணிகத்தைச் சரிபார்க்கவும் ஆர்டரை உருவாக்கவும் மட்டுமே.',
+c2t:'Why|क्यों|का|ஏன்',
+c2:'Required to sell GST-based products and to activate service. Nothing is used for marketing.|GST आधारित प्रोडक्ट बेचने और सेवा चालू करने के लिए ज़रूरी। मार्केटिंग के लिए कुछ भी इस्तेमाल नहीं होता।|GST आधारित उत्पादने विकण्यासाठी आणि सेवा सुरू करण्यासाठी आवश्यक. मार्केटिंगसाठी काहीही वापरले जात नाही.|GST சார்ந்த தயாரிப்புகளை விற்கவும் சேவையை இயக்கவும் தேவை. எதுவும் மார்க்கெட்டிங்கிற்குப் பயன்படுத்தப்படாது.',
+c3t:'How long|कितने समय तक|किती काळ|எவ்வளவு காலம்',
+c3:'Documents are deleted 30 days after your service is live, or 30 days after you stop (demo policy). IDs are masked on screen and encrypted.|सेवा चालू होने के 30 दिन बाद, या बंद करने के 30 दिन बाद दस्तावेज़ हटा दिए जाते हैं (डेमो नीति)। ID स्क्रीन पर छिपाई जाती है और एन्क्रिप्टेड रहती है।|सेवा सुरू झाल्यानंतर ३० दिवसांनी, किंवा बंद केल्यानंतर ३० दिवसांनी कागदपत्रे हटवली जातात (डेमो धोरण). ID स्क्रीनवर लपवली जाते आणि एन्क्रिप्टेड असते.|சேவை தொடங்கிய 30 நாட்களுக்குப் பிறகு அல்லது நிறுத்திய 30 நாட்களுக்குப் பிறகு ஆவணங்கள் நீக்கப்படும் (டெமோ கொள்கை). ID திரையில் மறைக்கப்பட்டு குறியாக்கம் செய்யப்படும்.',
+agree:'I agree, and I know I can withdraw consent any time. (DPDP Act 2023)|मैं सहमत हूँ, और मुझे पता है कि मैं कभी भी सहमति वापस ले सकता हूँ। (DPDP अधिनियम 2023)|मी सहमत आहे आणि मला माहीत आहे की मी कधीही संमती मागे घेऊ शकतो. (DPDP कायदा 2023)|நான் ஒப்புக்கொள்கிறேன்; எப்போது வேண்டுமானாலும் ஒப்புதலை திரும்பப் பெறலாம் என்று அறிவேன். (DPDP சட்டம் 2023)',
+agb:'I agree, continue|सहमत हूँ, आगे बढ़ें|सहमत, पुढे जा|ஒப்புக்கொள்கிறேன், தொடரவும்',
+kh:'Upload once, we check it|एक बार अपलोड करें, हम जाँचेंगे|एकदा अपलोड करा, आम्ही तपासू|ஒருமுறை பதிவேற்றுங்கள், நாங்கள் சரிபார்ப்போம்',
+dgst:'GST certificate|GST प्रमाणपत्र|GST प्रमाणपत्र|GST சான்றிதழ்',dudyam:'Udyam certificate|उद्यम प्रमाणपत्र|उद्यम प्रमाणपत्र|உத்யம் சான்றிதழ்',did:'Signatory ID|हस्ताक्षरकर्ता ID|स्वाक्षरीकर्त्याची ID|கையொப்பதாரர் ID',dbill:'Electricity bill|बिजली बिल|वीज बिल|மின் கட்டண ரசீது',
+dm:'Udyam certificate missing|उद्यम प्रमाणपत्र नहीं है|उद्यम प्रमाणपत्र नाही|உத்யம் சான்றிதழ் இல்லை',
+yours:' (yours)| (आपका)| (तुमचे)| (உங்களுடையது)',
+up:'📷 Upload my own GST certificate (reads it with OCR)|📷 अपना GST प्रमाणपत्र अपलोड करें (OCR से पढ़ा जाएगा)|📷 माझे GST प्रमाणपत्र अपलोड करा (OCR ने वाचले जाईल)|📷 என் GST சான்றிதழை பதிவேற்றுங்கள் (OCR மூலம் படிக்கப்படும்)',
+gi:'Or type a GSTIN|या GSTIN टाइप करें|किंवा GSTIN टाइप करा|அல்லது GSTIN தட்டச்சு செய்யுங்கள்',
+lk:'Look up|खोजें|शोधा|தேடு',
+chk:'Upload and check (demo: sample documents)|अपलोड करें और जाँचें (डेमो: नमूना दस्तावेज़)|अपलोड करा आणि तपासा (डेमो: नमुना कागदपत्रे)|பதிவேற்றி சரிபார்க்கவும் (டெமோ: மாதிரி ஆவணங்கள்)',
+chg:'Checking…|जाँच हो रही है…|तपासत आहे…|சரிபார்க்கிறது…',
+fixb:'Fix now: upload again|अभी ठीक करें: फिर अपलोड करें|आता दुरुस्त करा: पुन्हा अपलोड करा|இப்போது சரிசெய்: மீண்டும் பதிவேற்று',
+talk:'Talk to a person|किसी व्यक्ति से बात करें|व्यक्तीशी बोला|ஒருவருடன் பேசுங்கள்',
+pass:'All checks passed.|सभी जाँच पास।|सर्व तपासण्या पास.|அனைத்து சரிபார்ப்புகளும் தேர்ச்சி.',
+passd:'GST verified. GST-only add-ons are now unlocked.|GST सत्यापित। GST वाले ऐड-ऑन अब खुल गए हैं।|GST पडताळले. GST साठीचे ॲड-ऑन आता खुले झाले.|GST சரிபார்க்கப்பட்டது. GST தேவையான கூடுதல் வசதிகள் இப்போது திறந்தன.',
+ocr0:'Reading your photo…|आपकी फ़ोटो पढ़ी जा रही है…|तुमचा फोटो वाचत आहे…|உங்கள் புகைப்படம் படிக்கப்படுகிறது…',
+ocg:'Read GSTIN {0}{1}. Now tap “Upload and check”.|GSTIN {0} पढ़ा गया{1}। अब “अपलोड करें और जाँचें” दबाएँ।|GSTIN {0} वाचला{1}. आता “अपलोड करा आणि तपासा” दाबा.|GSTIN {0} படிக்கப்பட்டது{1}. இப்போது “பதிவேற்றி சரிபார்க்கவும்” அழுத்துங்கள்.',
+oclq:' (low quality photo)| (फ़ोटो साफ़ नहीं)| (फोटो स्पष्ट नाही)| (புகைப்படம் தெளிவில்லை)',
+ocb:'This photo is too blurry to read. Tap “Upload and check” to see the fix message.|यह फ़ोटो पढ़ने के लिए बहुत धुँधली है। सुधार संदेश देखने के लिए “अपलोड करें और जाँचें” दबाएँ।|हा फोटो वाचण्यासाठी खूप अंधुक आहे. दुरुस्ती संदेश पाहण्यासाठी “अपलोड करा आणि तपासा” दाबा.|இந்தப் புகைப்படம் படிக்க முடியாத அளவு மங்கலாக உள்ளது. சரிசெய்யும் செய்திக்கு “பதிவேற்றி சரிபார்க்கவும்” அழுத்துங்கள்.',
+ocn:'Could not find a GSTIN in this photo. Try a straighter, clearer photo.|इस फ़ोटो में GSTIN नहीं मिला। सीधी और साफ़ फ़ोटो लें।|या फोटोत GSTIN सापडला नाही. सरळ आणि स्पष्ट फोटो घ्या.|இந்தப் புகைப்படத்தில் GSTIN கிடைக்கவில்லை. நேராகவும் தெளிவாகவும் எடுக்கவும்.',
+ocf:'Reading photos needs internet the first time. Use the sample documents instead.|फ़ोटो पढ़ने के लिए पहली बार इंटरनेट चाहिए। नमूना दस्तावेज़ इस्तेमाल करें।|फोटो वाचण्यासाठी पहिल्यांदा इंटरनेट लागते. नमुना कागदपत्रे वापरा.|புகைப்படம் படிக்க முதல் முறை இணையம் தேவை. மாதிரி ஆவணங்களைப் பயன்படுத்தவும்.',
+lf:'A GSTIN has 15 letters and digits.|GSTIN में 15 अक्षर और अंक होते हैं।|GSTIN मध्ये १५ अक्षरे आणि अंक असतात.|GSTIN இல் 15 எழுத்துகள் மற்றும் எண்கள் இருக்கும்.',
+lo:'Format and checksum OK|फ़ॉर्मेट और चेकसम सही|फॉरमॅट आणि चेकसम बरोबर|வடிவம் மற்றும் செக்சம் சரி',
+lb:'Format OK, checksum does not match|फ़ॉर्मेट सही, चेकसम मेल नहीं खाता|फॉरमॅट बरोबर, चेकसम जुळत नाही|வடிவம் சரி, செக்சம் பொருந்தவில்லை',
+ln:'Not found in the GST registry|GST रजिस्ट्री में नहीं मिला|GST नोंदणीत सापडला नाही|GST பதிவேட்டில் இல்லை',
+stActive:'Active|सक्रिय|सक्रिय|செயலில்',stCancelled:'Cancelled|रद्द|रद्द|ரத்து',stSuspended:'Suspended|निलंबित|निलंबित|இடைநிறுத்தம்',
+k1:'All 4 documents present|सभी 4 दस्तावेज़ मौजूद|सर्व ४ कागदपत्रे आहेत|4 ஆவணங்களும் உள்ளன',
+k1m:'Udyam certificate is missing. Upload it, or enter your Udyam number.|उद्यम प्रमाणपत्र नहीं है। उसे अपलोड करें या अपना उद्यम नंबर दर्ज करें।|उद्यम प्रमाणपत्र नाही. ते अपलोड करा किंवा उद्यम नंबर टाका.|உத்யம் சான்றிதழ் இல்லை. அதை பதிவேற்றவும் அல்லது உத்யம் எண்ணை உள்ளிடவும்.',
+k2:'Image is readable|इमेज पढ़ने लायक है|प्रतिमा वाचता येते|படம் படிக்கும்படி உள்ளது',
+k2m:'Your GST certificate is too blurry to read (sharpness score 1; we need 200+). Retake it in good light.|आपका GST प्रमाणपत्र पढ़ने के लिए बहुत धुँधला है (शार्पनेस स्कोर 1; 200+ चाहिए)। अच्छी रोशनी में दोबारा फ़ोटो लें।|तुमचे GST प्रमाणपत्र वाचण्यासाठी खूप अंधुक आहे (शार्पनेस स्कोर 1; २००+ हवा). चांगल्या प्रकाशात पुन्हा फोटो घ्या.|உங்கள் GST சான்றிதழ் படிக்க முடியாத அளவு மங்கலாக உள்ளது (தெளிவு மதிப்பெண் 1; 200+ தேவை). நல்ல வெளிச்சத்தில் மீண்டும் எடுக்கவும்.',
+k2n:'We could not read this photo clearly. Retake it in good light.|हम इस फ़ोटो को साफ़ नहीं पढ़ पाए। अच्छी रोशनी में दोबारा फ़ोटो लें।|आम्हाला हा फोटो स्पष्ट वाचता आला नाही. चांगल्या प्रकाशात पुन्हा फोटो घ्या.|இந்தப் புகைப்படத்தை தெளிவாகப் படிக்க முடியவில்லை. நல்ல வெளிச்சத்தில் மீண்டும் எடுக்கவும்.',
+k3:'Photo alignment|फ़ोटो का संरेखण|फोटोचे संरेखन|புகைப்பட சீரமைப்பு',
+k3m:'Tilted photo, straightened automatically|फ़ोटो टेढ़ी थी, अपने आप सीधी की गई|फोटो तिरका होता, आपोआप सरळ केला|புகைப்படம் சாய்ந்திருந்தது, தானாக நேராக்கப்பட்டது',
+k4:'GSTIN exists in registry|GSTIN रजिस्ट्री में मौजूद|GSTIN नोंदणीत आहे|GSTIN பதிவேட்டில் உள்ளது',
+k4m:'The GSTIN on your certificate ({0}) is not in the GST registry. One character looks different; please check it.|आपके प्रमाणपत्र पर GSTIN ({0}) GST रजिस्ट्री में नहीं है। एक अक्षर अलग लगता है; कृपया जाँचें।|तुमच्या प्रमाणपत्रावरील GSTIN ({0}) GST नोंदणीत नाही. एक अक्षर वेगळे दिसते; कृपया तपासा.|உங்கள் சான்றிதழில் உள்ள GSTIN ({0}) GST பதிவேட்டில் இல்லை. ஒரு எழுத்து வேறுபடுகிறது; சரிபார்க்கவும்.',
+k5:'GSTIN is Active|GSTIN सक्रिय है|GSTIN सक्रिय आहे|GSTIN செயலில் உள்ளது',
+k5m:'This GST registration is {0} in the registry. We cannot sell GST-based products until it is active.|यह GST पंजीकरण रजिस्ट्री में {0} है। जब तक यह सक्रिय नहीं होता, हम GST आधारित प्रोडक्ट नहीं बेच सकते।|हे GST नोंदणी रजिस्ट्रीमध्ये {0} आहे. ते सक्रिय होईपर्यंत आम्ही GST आधारित उत्पादने विकू शकत नाही.|இந்த GST பதிவு பதிவேட்டில் {0} நிலையில் உள்ளது. அது செயலில் வரும் வரை GST சார்ந்த தயாரிப்புகளை விற்க முடியாது.',
+k5n:'This GSTIN is not in the GST registry. Please check it.|यह GSTIN GST रजिस्ट्री में नहीं है। कृपया जाँचें।|हा GSTIN GST नोंदणीत नाही. कृपया तपासा.|இந்த GSTIN GST பதிவேட்டில் இல்லை. சரிபார்க்கவும்.',
+k5ok:'GSTIN exists and is Active|GSTIN मौजूद है और सक्रिय है|GSTIN आहे आणि सक्रिय आहे|GSTIN உள்ளது மற்றும் செயலில் உள்ளது',
+k6:'Udyam number valid|उद्यम नंबर सही|उद्यम नंबर वैध|உத்யம் எண் செல்லுபடியாகும்',
+k6b:'The Udyam number is blank on your certificate. Upload the full certificate.|आपके प्रमाणपत्र पर उद्यम नंबर खाली है। पूरा प्रमाणपत्र अपलोड करें।|तुमच्या प्रमाणपत्रावर उद्यम नंबर रिकामा आहे. पूर्ण प्रमाणपत्र अपलोड करा.|உங்கள் சான்றிதழில் உத்யம் எண் காலியாக உள்ளது. முழு சான்றிதழை பதிவேற்றவும்.',
+k6w:'Waiting for the Udyam document.|उद्यम दस्तावेज़ की प्रतीक्षा है।|उद्यम कागदपत्राची प्रतीक्षा आहे.|உத்யம் ஆவணத்திற்காக காத்திருக்கிறது.',
+k7:'Name matches registry|नाम रजिस्ट्री से मेल खाता है|नाव नोंदणीशी जुळते|பெயர் பதிவேட்டுடன் பொருந்துகிறது',
+k7m:'Certificate says “{0}” but the registry says “{1}”.|प्रमाणपत्र में “{0}” है पर रजिस्ट्री में “{1}” है।|प्रमाणपत्रावर “{0}” आहे पण नोंदणीत “{1}” आहे.|சான்றிதழில் “{0}” உள்ளது ஆனால் பதிவேட்டில் “{1}” உள்ளது.',
+k8:'Address proof under 90 days|पते का प्रमाण 90 दिन से कम पुराना|पत्त्याचा पुरावा ९० दिवसांपेक्षा कमी जुना|முகவரிச் சான்று 90 நாட்களுக்குள்',
+k8m:'This bill is {0} days old. Upload one from the last 90 days.|यह बिल {0} दिन पुराना है। पिछले 90 दिनों का बिल अपलोड करें।|हे बिल {0} दिवस जुने आहे. गेल्या ९० दिवसांतील बिल अपलोड करा.|இந்த ரசீது {0} நாட்கள் பழையது. கடந்த 90 நாட்களுக்குள் உள்ளதை பதிவேற்றவும்.',
+k8a:'New bill accepted|नया बिल स्वीकार किया गया|नवीन बिल स्वीकारले|புதிய ரசீது ஏற்கப்பட்டது',
+k8b:'Bill is {0} days old|बिल {0} दिन पुराना है|बिल {0} दिवस जुने आहे|ரசீது {0} நாட்கள் பழையது',
+k9:'ID matches the person|ID व्यक्ति से मेल खाती है|ID व्यक्तीशी जुळते|ID நபருடன் பொருந்துகிறது',
+ask:'Owner asked for a person|मालिक ने किसी व्यक्ति से बात करने को कहा|मालकाने व्यक्तीशी बोलायला सांगितले|உரிமையாளர் ஒருவருடன் பேச கேட்டார்',
+ph:'Confirm and pay|पुष्टि करें और भुगतान करें|खात्री करा आणि पैसे भरा|உறுதிசெய்து செலுத்துங்கள்',
+mon:'Monthly|मासिक|मासिक|மாதம்',
+pa:'Add-ons (GST verified)|ऐड-ऑन (GST सत्यापित)|ॲड-ऑन (GST पडताळले)|கூடுதல் வசதிகள் (GST சரிபார்க்கப்பட்டது)',
+sl:'Installation slot|इंस्टॉलेशन का समय|इन्स्टॉलेशनची वेळ|நிறுவல் நேரம்',
+ptd:'Pay today: first month {0}{1} = {2}|आज का भुगतान: पहला महीना {0}{1} = {2}|आजचे पेमेंट: पहिला महिना {0}{1} = {2}|இன்று செலுத்த: முதல் மாதம் {0}{1} = {2}',
+pts:' + setup {0}| + सेटअप {0}| + सेटअप {0}| + செட்அப் {0}',
+pay:'Pay {0} with UPI (simulated)|UPI से {0} भरें (सिम्युलेटेड)|UPI ने {0} भरा (सिम्युलेटेड)|UPI மூலம் {0} செலுத்து (சிமுலேட்டட்)',
+payp:'Processing UPI…|UPI प्रोसेस हो रहा है…|UPI प्रक्रिया सुरू आहे…|UPI செயலாக்கப்படுகிறது…',
+th:'Order tracker|ऑर्डर ट्रैकर|ऑर्डर ट्रॅकर|ஆர்டர் டிராக்கர்',
+tp:'Order placed in {0}|ऑर्डर {0} में हो गया|ऑर्डर {0} मध्ये झाली|ஆர்டர் {0} இல் பதிவானது',
+tn:'Today the same journey takes about 17.6 days and 3 chase calls.|आज यही प्रक्रिया लगभग 17.6 दिन और 3 फ़ॉलो-अप कॉल लेती है।|आज हीच प्रक्रिया सुमारे १७.६ दिवस आणि ३ पाठपुरावा कॉल घेते.|இன்று இதே செயல்முறைக்கு சுமார் 17.6 நாட்களும் 3 பின்தொடர் அழைப்புகளும் ஆகின்றன.',
+ts0:'Order placed|ऑर्डर दिया गया|ऑर्डर दिली|ஆர்டர் பதிவானது',ts1:'Documents approved|दस्तावेज़ मंज़ूर|कागदपत्रे मंजूर|ஆவணங்கள் ஏற்கப்பட்டன',ts2:'Installation booked: {0}|इंस्टॉलेशन बुक: {0}|इन्स्टॉलेशन बुक: {0}|நிறுவல் முன்பதிவு: {0}',ts3:'Engineer on the way|इंजीनियर रास्ते में|इंजिनिअर वाटेत|பொறியாளர் வந்துகொண்டிருக்கிறார்',ts4:'Live|चालू|सुरू|இயக்கத்தில்',
+wa0:'Hi {0}, your Accel Biz order is placed.|नमस्ते {0}, आपका Accel Biz ऑर्डर हो गया है।|नमस्कार {0}, तुमची Accel Biz ऑर्डर झाली आहे.|வணக்கம் {0}, உங்கள் Accel Biz ஆர்டர் பதிவாகிவிட்டது.',
+wa1:'Your documents are approved. Installation is booked.|आपके दस्तावेज़ मंज़ूर हो गए हैं। इंस्टॉलेशन बुक हो गया है।|तुमची कागदपत्रे मंजूर झाली आहेत. इन्स्टॉलेशन बुक झाले आहे.|உங்கள் ஆவணங்கள் ஏற்கப்பட்டன. நிறுவல் முன்பதிவாகிவிட்டது.',
+wa2:'Your installation is booked for {0}.|आपका इंस्टॉलेशन {0} को बुक है।|तुमचे इन्स्टॉलेशन {0} रोजी बुक आहे.|உங்கள் நிறுவல் {0} அன்று முன்பதிவாகியுள்ளது.',
+wa3:'Our engineer is on the way. Keep the site open.|हमारा इंजीनियर रास्ते में है। साइट खुली रखें।|आमचा इंजिनिअर वाटेत आहे. जागा उघडी ठेवा.|எங்கள் பொறியாளர் வந்துகொண்டிருக்கிறார். இடத்தைத் திறந்து வைக்கவும்.',
+wa4:'You are live. Welcome to Accel Biz!|आप चालू हैं। Accel Biz में आपका स्वागत है!|तुम्ही सुरू झालात. Accel Biz मध्ये स्वागत!|நீங்கள் இயக்கத்தில் உள்ளீர்கள். Accel Biz க்கு வரவேற்கிறோம்!',
+wal:'WhatsApp|WhatsApp|WhatsApp|WhatsApp',
+ff:'Fast-forward demo|डेमो आगे बढ़ाएँ|डेमो पुढे न्या|டெமோவை முன்னோக்கு',
+need:'Need a person? Talk to us|व्यक्ति से बात करनी है? हमसे बात करें|व्यक्तीशी बोलायचे आहे? आमच्याशी बोला|ஒருவருடன் பேச வேண்டுமா? எங்களுடன் பேசுங்கள்',
+hh:'A person will help you|एक व्यक्ति आपकी मदद करेगा|एक व्यक्ती तुम्हाला मदत करेल|ஒருவர் உங்களுக்கு உதவுவார்',
+ht:'Our partner will call you in {0}. You do not need to start again.|हमारे पार्टनर आपको {0} में कॉल करेंगे। आपको दोबारा शुरू नहीं करना होगा।|आमचे पार्टनर तुम्हाला {0} मध्ये कॉल करतील. तुम्हाला पुन्हा सुरू करावे लागणार नाही.|எங்கள் பார்ட்னர் உங்களை {0} இல் அழைப்பார். நீங்கள் மீண்டும் தொடங்க வேண்டியதில்லை.',
+hs:'What the agent sees (case already filled in)|एजेंट को क्या दिखता है (केस पहले से भरा हुआ)|एजंटला काय दिसते (केस आधीच भरलेली)|முகவருக்குத் தெரிவது (வழக்கு ஏற்கனவே நிரப்பப்பட்டது)',
+hb:'Business|बिज़नेस|व्यवसाय|வணிகம்',hc:'Contact|संपर्क|संपर्क|தொடர்பு',hp:'Plan|प्लान|प्लॅन|திட்டம்',hr:'Reason|कारण|कारण|காரணம்',
+hf:'Lead stays with the partner of record. Commission protected.|लीड रिकॉर्ड वाले पार्टनर के पास ही रहती है। कमीशन सुरक्षित।|लीड नोंदणीकृत पार्टनरकडेच राहते. कमिशन सुरक्षित.|லீட் பதிவுசெய்த பார்ட்னரிடமே இருக்கும். கமிஷன் பாதுகாக்கப்படும்.',
+cl:'Close|बंद करें|बंद करा|மூடு',
+ailoc:'I picked up: {0}. Please tap to confirm or fill in the rest.|मैंने समझा: {0}। कृपया टैप करके पुष्टि करें या बाकी भरें।|मी समजले: {0}. कृपया टॅप करून खात्री करा किंवा उरलेले भरा.|நான் புரிந்துகொண்டது: {0}. தட்டி உறுதிசெய்யவும் அல்லது மீதியை நிரப்பவும்.',
+ailb:'Offline keyword reader, not AI|ऑफ़लाइन कीवर्ड रीडर, AI नहीं|ऑफलाइन कीवर्ड रीडर, AI नाही|ஆஃப்லைன் சொல் வாசிப்பு, AI அல்ல',
+ailn:'I could not pick out the details. Please use the taps below.|मैं विवरण नहीं समझ सका। कृपया नीचे टैप करें।|मला तपशील समजले नाहीत. कृपया खाली टॅप करा.|விவரங்களைப் புரிந்துகொள்ள முடியவில்லை. கீழே தட்டவும்.',
+aiph:'Or tell me about your office in your own words|या अपने ऑफ़िस के बारे में अपने शब्दों में बताइए|किंवा तुमच्या ऑफिसबद्दल तुमच्या शब्दांत सांगा|அல்லது உங்கள் அலுவலகத்தைப் பற்றி உங்கள் வார்த்தைகளில் சொல்லுங்கள்',
+aisend:'Ask|भेजें|पाठवा|அனுப்பு',
+aioff:'AI advisor is off (no key). Using the offline keyword reader. Add a free Gemini key in the left panel to enable AI.',
+aihint:'Please do not type phone or ID numbers.|कृपया फ़ोन या ID नंबर न लिखें।|कृपया फोन किंवा ID क्रमांक लिहू नका.|தயவுசெய்து ஃபோன் அல்லது ID எண்களை எழுத வேண்டாம்.',
+aith:'Thinking…|सोच रहा हूँ…|विचार करत आहे…|யோசிக்கிறேன்…',
+aikey:'The AI advisor is not switched on. Please use the taps below.|AI सलाहकार चालू नहीं है। कृपया नीचे टैप करें।|AI सल्लागार सुरू नाही. कृपया खाली टॅप करा.|AI ஆலோசகர் இயக்கப்படவில்லை. கீழே தட்டவும்.',
+aierr:'I could not reach the AI advisor. Please use the taps below.|AI सलाहकार से जुड़ नहीं सका। कृपया नीचे टैप करें।|AI सल्लागाराशी संपर्क होऊ शकला नाही. कृपया खाली टॅप करा.|AI ஆலோசகரை அடைய முடியவில்லை. கீழே தட்டவும்.',
+hrgst:'GST-only add-on chosen without a GST number: {0}|GST नंबर के बिना केवल-GST ऐड-ऑन चुना: {0}|GST क्रमांकाशिवाय फक्त-GST ऍड-ऑन निवडले: {0}|GST எண் இல்லாமல் GST-க்கு மட்டுமான ஆட்-ஆன் தேர்வு: {0}',
+hrst:'The order stopped moving for a while|ऑर्डर कुछ देर से आगे नहीं बढ़ा|ऑर्डर काही वेळ पुढे सरकली नाही|ஆர்டர் சிறிது நேரமாக நகரவில்லை',
+lockp:'No GST? Tap to talk to a person.|GST नहीं है? किसी व्यक्ति से बात करने के लिए टैप करें।|GST नाही? व्यक्तीशी बोलण्यासाठी टॅप करा.|GST இல்லையா? ஒருவருடன் பேச தட்டவும்.',
+rf0:'Know another small office?|क्या आप किसी और छोटे ऑफ़िस को जानते हैं?|दुसऱ्या एखाद्या छोट्या ऑफिसला ओळखता का?|வேறு சிறிய அலுவலகம் தெரியுமா?',
+rf1:'Share your link. They get the same 10-minute journey, with a person only if they need one.|अपना लिंक भेजिए। उन्हें भी यही 10 मिनट की प्रक्रिया मिलेगी, ज़रूरत हो तभी व्यक्ति मदद करेगा।|तुमची लिंक पाठवा. त्यांनाही हीच १० मिनिटांची प्रक्रिया मिळेल, गरज असेल तेव्हाच व्यक्ती मदत करेल.|உங்கள் இணைப்பைப் பகிருங்கள். அவர்களுக்கும் இதே 10 நிமிட செயல்முறை, தேவைப்பட்டால் மட்டுமே ஒருவர் உதவுவார்.',
+rfs:'Share on WhatsApp|WhatsApp पर भेजें|WhatsApp वर पाठवा|WhatsApp-இல் பகிர்',
+rfc:'Copy link|लिंक कॉपी करें|लिंक कॉपी करा|இணைப்பை நகலெடு',
+rfd:'Thank you. Your link is ready to send.|धन्यवाद। आपका लिंक भेजने के लिए तैयार है।|धन्यवाद. तुमची लिंक पाठवण्यास तयार आहे.|நன்றி. உங்கள் இணைப்பு அனுப்ப தயார்.',
+rfm:'I set up my office broadband and SIMs on my phone in about 10 minutes. Try it: {0}|मैंने अपने ऑफ़िस का ब्रॉडबैंड और SIM फ़ोन पर लगभग 10 मिनट में लगवाया। आप भी देखिए: {0}|मी माझ्या ऑफिसचे ब्रॉडबँड आणि SIM फोनवर सुमारे १० मिनिटांत घेतले. तुम्हीही पाहा: {0}|நான் என் அலுவலக பிராட்பேண்ட் மற்றும் SIM-ஐ போனில் சுமார் 10 நிமிடத்தில் பெற்றேன். நீங்களும் பாருங்கள்: {0}'};
+const OPT=[['o0a','o0b','o0c','o0d','o0e'],['o1a','o1b','o1c'],['o2a','o2b','o2c'],['o3a','o3b','o3c']];
+const STEP={welcome:0,chat:1,price:2,consent:3,kyc:4,pay:5,track:6};
+let S,timer,STALL=120,KEY='',PROV='gemini';const KEYS={gemini:'',claude:''},DEFM={gemini:'gemini-2.5-flash-lite',claude:'claude-sonnet-5-5'},M={},esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+try{PROV=sessionStorage.getItem('abp')||'gemini';KEYS.gemini=sessionStorage.getItem('abk_gemini')||'';KEYS.claude=sessionStorage.getItem('abk_claude')||''}catch(e){}
+KEY=KEYS[PROV];
+function setKey(v){KEY=KEYS[PROV]=(v||'').trim();try{sessionStorage.setItem('abk_'+PROV,KEY)}catch(e){}if(S&&S.scr=='chat'&&!S.ai)render();}
+function setProv(v){PROV=v;KEY=KEYS[v];try{sessionStorage.setItem('abp',v)}catch(e){}$('key').value=KEY;$('mdl').value=DEFM[v]}
+const MOD=()=>($('mdl')&&$('mdl').value.trim())||DEFM[PROV];
+function x(k,...a){const s=K[k].split('|');let v=s[LI[S.lang]]??s[0];a.forEach((y,i)=>v=v.split('{'+i+'}').join(y));return v}
+const cat=id=>D.cat.find(c=>c.product_id==id),mask=s=>s.slice(0,2)+'•••••••••'+s.slice(-3);
+const dt=d=>d.toLocaleDateString(LOC[LI[S.lang]],{weekday:'short',day:'numeric',month:'short'});
+function fresh(a){clearInterval(timer);S={a,lang:/Hindi/.test(a.lang)?'hi':/Marathi/.test(a.lang)?'mr':/Tamil/.test(a.lang)?'ta':'en',scr:'welcome',ans:[],t0:0,taps:0,add:{},fails:0,fixed:{},ver:false,slot:0,paid:false,trk:0,done:0,run:0,o:null,img:null,oct:null,note:'',ai:null,aiNote:'',aiTxt:'',last:Date.now(),stalled:0,rfn:0,rec:null};
+ S.rec=M[a.id]={id:a.id,name:a.name,started:0,consent:0,ver:0,paid:0,secs:0,taps:0,golive:null,ho:[],ref:0,ai:0};$('sheet').style.display='none';
+ document.querySelectorAll('.sc').forEach(b=>b.classList.toggle('on',b.dataset.k==a.id));upd();render()}
+function tap(){if(!S.t0){S.t0=Date.now();S.rec.started=1;timer=setInterval(upd,500)}S.taps++;S.last=Date.now();upd()}
+function upd(){if(!S)return;const s=S.done||Math.floor((Date.now()-(S.t0||Date.now()))/1000);$('tm').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');$('tp').textContent=S.taps;$('cc').textContent=S.rec.ho.length;$('dy').textContent=S.paid?'0':S.rec.ho.length?'with agent':'–';S.rec.taps=S.taps}
+function go(s){tap();S.scr=s;render()}
+function sug(q){const a=S.a;return q==0?(/Dental|Physio|Clinic/i.test(a.type)?0:/CA|Legal|law/i.test(a.type)?1:/Real|Insur|Tour|Stays/i.test(a.type)?2:/Factory|Wood|Electron|manuf/i.test(a.type+a.name)?4:3):q==1?(a.emp<=8?0:a.emp<=15?1:2):q==2?(a.emp<=8?1:2):0}
+function plan(){const a=S.a,n=S.ans[1]==null?(a.emp<=8?0:a.emp<=15?1:2):S.ans[1],ln=S.ans[2]==null?2:S.ans[2]+1,gst=S.ans[3]==0,it=[],P=(id,q,why,wa)=>{const c=cat(id);it.push({n:c.product_name,q,p:+c.price_min_inr_per_month,id,why,wa})};
+ if(n==2){gst&&a.tier==1?P('P03',1,'w1g'):P('P02',1,a.tier==2?'w1t':'w1h');P('P08',ln,'w2p')}
+ else{P(n?'P02':'P01',1,n?'w3a':'w3b');P('P07',ln,'w4')}
+ const u=[5,10,20][n];P('P16',u,'w5',u);if(n)P('P20',[0,10,20][n],'w6');if(n==2)P('P17',1,'w7');
+ return{n,name:['Office Lite','Office Standard','Office Plus'][n],it,base:it.reduce((s,i)=>s+i.p*i.q,0),gst}}
+const ADD=[['P17',499,0,0,0],['P11',200,0,0,0],['P09',499,1500,0,0],['P22',399,1000,0,0],['P18',299,0,0,0],['P15',999,0,1,0],['P14',1500,0,1,0],['P13',1500,1000,1,0],['P21',1999,4000,1,10]];
+function addons(){const p=plan();return ADD.filter(y=>!(y[0]=='P17'&&p.n==2)&&S.a.emp>=y[4]).map(y=>{const lk=y[3]&&!S.ver,on=S.add[y[0]]&&!lk;return`<div class="tg"><span>${x('a'+y[0])} <small class="m">${R(y[1])}${x('mo')}${y[2]?' + '+R(y[2])+' '+x('su'):''}</small>${lk?'<br><small class="m">'+x('lock')+'</small>'+(noGst()?'<br><small class="m" style="color:var(--red)">'+x('lockp')+'</small>':''):''}</span><div class="sw ${on?'on':''} ${lk?'lk':''}" onclick="${lk?`lk('${y[0]}')`:`tg('${y[0]}')`}"></div></div>`}).join('')}
+function noGst(){return S.ans[3]==1||(S.run>0&&!S.ver&&checks().some(c=>c.s=='no'&&(c.t==x('k4')||c.t==x('k5'))))}
+function lk(k){tap();if(noGst())help('gst',k)}
+function tg(k){tap();S.add[k]=!S.add[k];render()}
+function tot(){const p=plan();let m=p.base,s=0;ADD.forEach(y=>{if(S.add[y[0]]&&!(y[3]&&!S.ver)&&!(y[0]=='P17'&&p.n==2)){m+=y[1];s+=y[2]}});return{m,s,p}}
+function days(){const p=plan();return Math.max(...p.it.map(i=>+cat(i.id).typical_install_days),...ADD.filter(y=>S.add[y[0]]).map(y=>+cat(y[0]).typical_install_days))}
+function checks(){const a=Object.assign({},S.a,S.o||{}),f=S.fixed,L=[],ok=(t,d)=>L.push({s:'ok',t,d}),no=(t,d)=>L.push({s:'no',t,d}),wn=(t,d)=>L.push({s:'wn',t,d});
+ const g=D.reg.g[a.gstin]||['','Not found'],miss=a.id=='K05'&&!f.udy;
+ miss?no(x('k1'),x('k1m')):ok(x('k1'));
+ (a.id=='K04'||a.lowq)&&!f.photo?no(x('k2'),x(a.lowq?'k2n':'k2m')):ok(x('k2'));
+ a.id=='K02'?wn(x('k3'),x('k3m')):ok(x('k3'));
+ if(a.certGstin!=a.gstin&&!f.gstin)no(x('k4'),x('k4m',mask(a.certGstin)));
+ else if(g[1]!='Active')no(x('k5'),g[1]=='Not found'?x('k5n'):x('k5m',x('st'+g[1])));
+ else ok(x('k5ok'),mask(a.gstin));
+ if(a.udyamBlank&&!f.udy)no(x('k6'),x('k6b'));else if(miss)no(x('k6'),x('k6w'));else ok(x('k6'));
+ const nz=s=>s.toLowerCase().replace(/[^a-z0-9]/g,''),pn=s=>s.replace(/.*Prop\. |\)/gi,'');
+ if(nz(a.certLegal)!=nz(a.legal)&&!f.name)no(x('k7'),x('k7m',pn(a.certLegal),pn(a.legal)));else ok(x('k7'));
+ const d=Math.round((TODAY-new Date(a.bill))/864e5);d>90&&!f.bill?no(x('k8'),x('k8m',d)):ok(x('k8'),d>90?x('k8a'):x('k8b',d));
+ ok(x('k9'),a.contact);return L}
+function why(){const c=checks().find(y=>y.s=='no');return c?c.t+': '+c.d:x('ask')}
+const ICON={ok:'✓',no:'✗',wn:'!'};
+function render(){const s=S.scr,a=S.a;$('top').innerHTML=`<div class="r"><span><b style="color:var(--red)">accel</b> Biz</span><span>${s=='welcome'?'':`⏱ ${$('tm').textContent} · ${x('step',STEP[s])}`}</span></div><div id="bar"><i style="width:${STEP[s]/6*100}%"></i></div>`;let h='',f='';
+ if(s=='welcome'){h=`<h1>Accel Biz<br><span style="color:var(--red)">${x('t10')}</span></h1><p class="m">${x('wel',a.contact,a.name)}</p><div class="card t">${x('hi')}</div><div class="chips">${LANGS.map((l,i)=>{const live=i<4;return`<span class="chip" style="${S.lang==l[0]?'border-color:var(--red);font-weight:bold':''}${live?'':';color:#9ca3af'}" onclick="${live?`S.lang='${l[0]}';S.note='';render()`:`S.note=x('soon','${l[1]}');render()`}">${l[1]}</span>`}).join('')}</div>${S.note?`<p class="m" style="color:var(--red)">${S.note}</p>`:''}<p class="m">${x('nov')}</p>`;f=`<button class="btn" onclick="go('chat')">${x('go')}</button>`}
+ if(s=='chat'){const n=S.ans.length;h=`<h2>${x('adv')}</h2>`;if(S.ai)h+=`<div class="b u">${esc(S.ai.text)}</div><div class="b a">${esc(S.ai.reply)}</div>${S.rec.ai==2?`<span class="lg">${x('ailb')}${S.aiWhy?' ('+esc(S.aiWhy)+')':''}</span>`:''}`;if(!S.ai&&n==0)h+=`<div class="card">${KEY?'':`<div class="m" style="color:#6b7280;font-size:11.5px;margin-bottom:6px">${x('aioff')}</div>`}<div class="row"><input class="ai" id="ai" value="${esc(S.aiTxt)}" placeholder="${esc(x('aiph'))}" onkeydown="if(event.key=='Enter')askAI()"><button class="chip" onclick="askAI()">${x('aisend')}</button></div><span class="lg">${x('aihint')}</span>${S.aiNote?`<div class="m" style="color:var(--red);margin-top:6px">${S.aiNote}</div>`:''}</div>`;for(let i=0;i<=Math.min(n,3);i++){h+=`<div class="b a">${x('q'+i)}</div>`;if(i<n)h+=`<div class="b u">${x(OPT[i][S.ans[i]])}</div>`}
+  if(n<4)h+=`<div class="chips">${OPT[n].map((o,j)=>`<span class="chip ${sug(n)==j?'sug':''}" onclick="S.ans[${n}]=${j};tap();render()">${x(o)}</span>`).join('')}</div>`;
+  else{const p=plan();h+=`<div class="b a">${x('best',p.name)}</div><div class="card">${p.it.map(i=>`<div class="row" style="align-items:flex-start"><span><b>${i.q>1?i.q+' × ':''}${i.n}</b><br><small class="m">${x(i.why,i.wa)}</small></span></div>`).join('')}</div>`;f=`<button class="btn" onclick="go('price')">${x('see')}</button>`}}
+ if(s=='price'){const t=tot(),p=t.p,sp=a.spend,df=t.m-sp;h=`<h2>${p.name}</h2><div class="card t"><div class="big">${R(t.m)}<small style="font-size:14px;color:var(--gr)"> ${x('mo')}</small></div><div class="m">${x('pr1',R(t.s))}</div></div>
+  <div class="card">${p.it.map(i=>`<div class="row"><span>${i.q>1?i.q+' × ':''}${i.n}</span><b>${R(i.p*i.q)}</b></div>`).join('')}</div>
+  <p class="m">${x('spend',R(sp))} ${df>0?x('more',R(df)):x('less',R(-df))}</p><h2 style="margin-top:14px">${x('adds')}</h2><div class="card">${addons()}</div>${p.n==2?`<div class="card t m">${x('big16')}</div>`:''}`;f=`<button class="btn" onclick="go('consent')">${x('cont')}</button>`}
+ if(s=='consent'){h=`<h2>${x('ch')}</h2><div class="card"><b>${x('c1t')}</b><p class="m">${x('c1')}</p><b>${x('c2t')}</b><p class="m">${x('c2')}</p><b>${x('c3t')}</b><p class="m">${x('c3')}</p></div><label style="font-size:13.5px;display:flex;gap:10px"><input type="checkbox" id="cb" onchange="$('nx').disabled=!this.checked"> ${x('agree')}</label>`;f=`<button class="btn" id="nx" disabled onclick="S.rec.consent=1;go('kyc')">${x('agb')}</button>`}
+ if(s=='kyc'){const L=S.run?checks():[],bad=L.filter(c=>c.s=='no'),sh=S.run>0?L.slice(0,S.run):[],id=a.id;
+  h=`<h2>${x('kh')}</h2><div class="docs">${['gst','udyam','id','bill'].map(d=>d=='udyam'&&id=='K05'&&!S.fixed.udy?`<div class="doc x">${x('dm')}</div>`:`<div class="doc"><img src="${d=='gst'&&S.img?S.img:'docs/'+id+'_'+d+'.jpg'}" alt="">${x('d'+d)}${d=='gst'&&S.img?x('yours'):''}</div>`).join('')}</div><div class="sp"></div>`;
+  if(!S.run)h+=`<label class="btn o" style="display:block;text-align:center;margin:8px 0;font-size:13px">${x('up')}<input type="file" accept="image/*" hidden onchange="ocr(this.files[0])"></label><div id="oc" class="m">${S.oct?S.oct():''}</div><div class="row"><input id="gi" placeholder="${x('gi')}" style="flex:1;padding:9px;border:1px solid var(--ln);border-radius:10px;text-transform:uppercase;margin-right:6px"><button class="chip" onclick="look()">${x('lk')}</button></div><div id="lr" class="m"></div>`;
+  if(!S.run)f=`<button class="btn" onclick="scan()">${x('chk')}</button>`;
+  else{h+=sh.map(c=>`<div class="ck ${c.s}"><i>${ICON[c.s]}</i><span>${c.t}${c.d?`<small>${c.d}</small>`:''}</span></div>`).join('');
+   if(sh.length<L.length)f=`<button class="btn" disabled>${x('chg')}</button>`;else if(bad.length){S.ver=false;f=`<button class="btn" onclick="fix()">${x('fixb')}</button><button class="lnk" onclick="help('ask')">${x('talk')}</button>`}else{S.ver=true;S.rec.ver=1;h+=`<div class="card t"><b>${x('pass')}</b><br><span class="m">${x('passd')}</span></div>`;f=`<button class="btn" onclick="go('pay')">${x('cont')}</button>`}}}
+ if(s=='pay'){const t=tot(),dy=days(),sl=[0,1,2].map(i=>dt(new Date(TODAY.getTime()+(dy+i)*864e5)));h=`<h2>${x('ph')}</h2><div class="card">${t.p.it.map(i=>`<div class="row"><span>${i.q>1?i.q+' × ':''}${i.n}</span><b>${R(i.p*i.q)}</b></div>`).join('')}<div class="row"><b>${x('mon')}</b><b>${R(t.m)}</b></div></div><h2>${x('pa')}</h2><div class="card">${addons()}</div><h2>${x('sl')}</h2><div class="chips">${sl.map((d,i)=>`<span class="chip" style="${S.slot==i?'border-color:var(--red);font-weight:bold':''}" onclick="S.slot=${i};render()">${d}</span>`).join('')}</div><p class="m">${x('ptd',R(t.m),t.s?x('pts',R(t.s)):'','<b>'+R(t.m+t.s)+'</b>')}</p>`;S.sl=sl;f=`<button class="btn" id="pb" onclick="pay()">${x('pay',R(t.m+t.s))}</button>`}
+ if(s=='track'){const st=[x('ts0'),x('ts1'),x('ts2',S.sl[S.slot]),x('ts3'),x('ts4')],msg=[x('wa0',a.contact),x('wa1'),x('wa2',S.sl[S.slot]),x('wa3'),x('wa4')];
+  h=`<h2>${x('th')}</h2><div class="card t"><b>${x('tp',$('tm').textContent)}</b><br><span class="m">${x('tn')}</span></div><div class="tl">${st.map((t,i)=>`<div class="st ${i<=S.trk?'d':''} ${i==S.trk+1?'c':''}">${t}</div>`).join('')}</div><div class="wa">💬 ${x('wal')}: ${msg[S.trk]}</div><div class="card"><b>${x('rf0')}</b><p class="m">${x('rf1')}</p><div class="m" style="word-break:break-all">${refLink()}</div><div class="chips"><span class="chip" onclick="refShare()">${x('rfs')}</span><span class="chip" onclick="refCopy()">${x('rfc')}</span></div>${S.rfn?`<p class="m" style="color:var(--ok)">${x('rfd')}</p>`:''}</div>`;f=(S.trk<4?`<button class="btn o" onclick="S.trk++;render()">${x('ff')}</button>`:'')+`<button class="lnk" onclick="help('ask')">${x('need')}</button>`}
+ $('body').innerHTML=h;$('foot').innerHTML=f;$('body').scrollTop=99999*(s=='chat'||s=='kyc')}
+const CH='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function gok(s){if(!/^[0-9]{2}[A-Z0-9]{10}[0-9A-Z]Z[0-9A-Z]$/.test(s))return false;let t=0;for(let i=0;i<14;i++){const v=CH.indexOf(s[i])*(i%2?2:1);t+=Math.floor(v/36)+v%36}return CH[(36-t%36)%36]==s[14]}
+function look(){tap();const s=$('gi').value.trim().toUpperCase(),r=D.reg.g[s];$('lr').innerHTML=!s?'':!/^[0-9A-Z]{15}$/.test(s)?`<span class="ck no"><i>✗</i>${x('lf')}</span>`:`<div class="ck ${gok(s)?'ok':'wn'}"><i>${gok(s)?'✓':'!'}</i>${x(gok(s)?'lo':'lb')}</div><div class="ck ${r&&r[1]=='Active'?'ok':'no'}"><i>${r&&r[1]=='Active'?'✓':'✗'}</i><span>${r?r[0]+' · '+x('st'+r[1]):x('ln')}</span></div>`}
+const SW={'0':['O'],O:['0'],'1':['I'],I:['1','T','J'],T:['I'],J:['I'],'5':['S'],S:['5'],'8':['B'],B:['8']};
+function vars(s,n){let o=[s];if(n)for(let i=0;i<s.length;i++)for(const y of SW[s[i]]||[])o.push(...vars(s.slice(0,i)+y+s.slice(i+1),n-1).slice(0,40));return o}
+function parseOCR(tx,conf){tx=tx.toUpperCase();const c=(tx.match(/[0-9A-Z]{15}/g)||[]).filter(y=>/^[0-9OIBS]{2}/.test(y));let g=null;for(const y of c){const m=vars(y,2).find(z=>D.reg.g[z]);if(m){g=m;break}}
+ if(!g&&c.length)g=c[0];const lg=(tx.match(/LEGAL NAME\s+(.+)/)||[])[1];return{gstin:g,legal:lg,lowq:conf<60||tx.replace(/\s/g,'').length<80||(!g&&!lg)}}
+async function ocr(f){if(!f)return;tap();S.img=URL.createObjectURL(f);S.oct=()=>x('ocr0');render();
+ try{await new Promise((ok,no)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+  const r=(await Tesseract.recognize(f,'eng')).data,o=parseOCR(r.text,r.confidence),rg=o.gstin&&D.reg.g[o.gstin];
+  S.o={lowq:o.lowq,gstin:o.gstin||'',certGstin:o.gstin||'',certLegal:o.legal?o.legal.trim():''};if(rg){S.o.legal=rg[0];if(!o.legal)S.o.certLegal=rg[0]}
+  S.oct=o.gstin?()=>x('ocg',mask(o.gstin),o.lowq?x('oclq'):''):o.lowq?()=>x('ocb'):()=>x('ocn');if(!o.gstin)S.o=o.lowq?{lowq:true}:null}
+ catch(e){S.o=null;S.img=null;S.oct=()=>x('ocf')}render()}
+const LNAME={en:'English',hi:'Hindi',mr:'Marathi',ta:'Tamil'};
+function aiSys(){return `You are the intake advisor for Accel Biz, a bundle of broadband, business SIMs, email and security for small offices in India. Read the owner's message and return ONLY a JSON object, no markdown, with integer fields (or null when the message does not say):
+q0 kind of business: 0 clinic/health, 1 CA/law/consulting, 2 realty/insurance/travel, 3 shop/retail, 4 factory/workshop
+q1 staff: 0 for 1-8 people, 1 for 9-15, 2 for 16 or more
+q2 phone numbers needed: 0 for one, 1 for two, 2 for three or more
+q3 has a GST number: 0 yes, 1 no, 2 not sure
+reply: one or two warm sentences in ${LNAME[S.lang]} that say what you understood and that the plan comes next. Never ask for or repeat phone numbers or ID numbers. Do not name prices or products; a rules engine picks the bundle from the catalogue.`}
+const NW={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20};
+function localRead(tx){tx=tx.toLowerCase();const num=s=>/^\d+$/.test(s)?+s:NW[s],NUM='(\\d+|'+Object.keys(NW).join('|')+')',o={};
+ o.q0=/clinic|dental|dentist|physio|doctor|hospital|health|diagnos|pharma/.test(tx)?0:/\bca\b|chartered|account|audit|law|legal|advocate|consult/.test(tx)?1:/real ?estate|realty|propert|insur|travel|tour|stays/.test(tx)?2:/factory|workshop|manufactur|wood|electronic|fabricat|mill/.test(tx)?4:/shop|store|retail|boutique|bakery|salon|showroom/.test(tx)?3:null;
+ let m=tx.match(new RegExp(NUM+'\\s*(?:\\+\\s*)?(?:staff|people|persons?|employees?|members?|workers?|colleagues|team)'))||tx.match(new RegExp('team of '+NUM))||tx.match(new RegExp('staff of '+NUM));
+ const n=m?num(m[1]):null;o.q1=n==null?null:n<=8?0:n<=15?1:2;
+ m=tx.match(new RegExp(NUM+'\\s*(?:\\+\\s*)?(?:phones?|sims?|numbers?|lines?|mobiles?)'));const ph=m?num(m[1]):null;o.q2=ph==null?null:ph<=1?0:ph==2?1:2;
+ o.q3=/not sure|do ?n.t know|unsure/.test(tx)&&/gst/.test(tx)?2:/gst/.test(tx)?(/no gst|not have gst|n.t have (a )?gst|without gst|no gstin|gst (is )?(not|pending)/.test(tx)?1:0):null;return o}
+function applyAns(o,tx,loc){const lim=[5,3,3,3],ans=[];for(let i=0;i<4;i++){const v=o['q'+i];if(Number.isInteger(v)&&v>=0&&v<lim[i])ans.push(v);else break}
+ if(!ans.length)return false;S.ans=ans;S.ai={text:tx,reply:loc?x('ailoc',ans.map((a,i)=>x(OPT[i][a])).join(', ')):String(o.reply||'').slice(0,400)};S.aiNote='';S.rec.ai=loc?2:1;return true}
+async function callAI(tx){
+ if(PROV=='gemini'){const ms=[MOD()].concat(['gemini-2.5-flash-lite','gemini-2.5-flash','gemini-flash-latest'].filter(m=>m!=MOD())),t0=Date.now();let last=null;
+  for(const m of ms){if(Date.now()-t0>11000){last=last||new Error('Gemini took too long');break}
+   const ac=new AbortController(),to=setTimeout(()=>ac.abort(),5000);let r;
+   try{r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(m)+':generateContent',{method:'POST',signal:ac.signal,headers:{'content-type':'application/json','x-goog-api-key':KEY},body:JSON.stringify({systemInstruction:{parts:[{text:aiSys()}]},contents:[{role:'user',parts:[{text:tx.slice(0,600)}]}],generationConfig:Object.assign({responseMimeType:'application/json',maxOutputTokens:512},/gemini-2\.5-flash/.test(m)?{thinkingConfig:{thinkingBudget:0}}:{})})})}
+   catch(e){clearTimeout(to);last=new Error('Gemini did not answer in 5 s ['+m+']');continue}
+   clearTimeout(to);
+   if(r.ok){const j=await r.json(),c=(j.candidates||[])[0];if(!c){last=new Error('Gemini returned no answer'+(j.promptFeedback&&j.promptFeedback.blockReason?' ('+j.promptFeedback.blockReason+')':''));continue}const txt=(c.content&&c.content.parts||[]).map(q=>q.text||'').join('');if(txt)return txt;last=new Error('Gemini reply was empty');continue}
+   let msg='';try{msg=(await r.json()).error.message}catch(e){}last=new Error('Gemini '+r.status+(msg?': '+msg:'')+' ['+m+']');
+   if([429,500,502,503,504,404].includes(r.status))continue;
+   throw last}
+  throw last||new Error('Gemini failed')}
+ const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:MOD(),max_tokens:400,system:aiSys(),messages:[{role:'user',content:tx.slice(0,600)}]})});
+ if(!r.ok){let m='';try{m=(await r.json()).error.message}catch(e){}throw new Error('Claude '+r.status+(m?': '+m:''))}const j=await r.json();return(j.content||[]).filter(c=>c.type=='text').map(c=>c.text).join('')}
+async function askAI(){const el=$('ai'),tx=(el&&el.value||'').trim();if(!tx)return;tap();S.aiTxt=tx;
+ if(!KEY){S.aiWhy='no key set';if(!applyAns(localRead(tx),tx,1))S.aiNote=x('ailn');render();return}
+ S.aiNote=x('aith');render();
+ try{const raw=await callAI(tx),mj=(raw||'').match(/\{[\s\S]*\}/);if(!mj)throw new Error('AI reply was empty or not JSON');const o=JSON.parse(mj[0]),lim=[5,3,3,3],ans=[];
+  for(let i=0;i<4;i++){const v=o['q'+i];if(Number.isInteger(v)&&v>=0&&v<lim[i])ans.push(v);else break}
+  if(!ans.length)throw new Error('AI reply had no usable answers');S.ans=ans;S.ai={text:tx,reply:String(o.reply||'').slice(0,400)};S.aiNote='';S.rec.ai=1;render()}
+ catch(e){S.aiWhy=String(e&&e.message||e).slice(0,170);console.warn('AI advisor:',S.aiWhy);if(!applyAns(localRead(tx),tx,1))S.aiNote=x('aierr');render()}}
+function scan(){tap();S.run=1;render();const L=checks().length,iv=setInterval(()=>{S.run++;render();if(S.run>=L){clearInterval(iv);if(checks().some(c=>c.s=='no')&&!S.fails)S.fails=1}},450)}
+function fix(){tap();if(['K04','K05','K11'].includes(S.a.id)){S.fixed={photo:1,udy:1,bill:1};S.run=0;scan()}else{S.fails++;S.run=1;scan();if(S.fails>=2)setTimeout(()=>help('fail'),2200)}}
+function pay(){tap();$('pb').disabled=1;$('pb').textContent=x('payp');setTimeout(()=>{S.paid=1;S.done=Math.floor((Date.now()-S.t0)/1000);S.rec.paid=1;S.rec.secs=S.done;S.rec.golive=days()+S.slot;clearInterval(timer);upd();S.scr='track';render()},1200)}
+function help(r,ex){tap();r=r||'ask';if(!S.rec.ho.includes(r))S.rec.ho.push(r);upd();const a=S.a,t=tot(),L=S.run?checks():[],why2=r=='fail'?why():r=='gst'?x('hrgst',x('a'+ex)):r=='stall'?x('hrst'):x('ask');$('sh').innerHTML=`<h2>${x('hh')}</h2><p class="m">${x('ht',x('lnm'))}</p><div class="card t"><b>${x('hs')}</b><div class="row"><span>${x('hb')}</span><b>${a.name}</b></div><div class="row"><span>${x('hc')}</span><b>${a.contact}, ${a.city}</b></div><div class="row"><span>${x('hp')}</span><b>${t.p.name} · ${R(t.m)}${x('mo')}</b></div><div class="row" style="align-items:flex-start"><span>${x('hr')}</span><b style="text-align:right;max-width:210px;font-size:11.5px">${why2.slice(0,170)}</b></div>${L.map(c=>`<div class="ck ${c.s}" style="padding:2px 0"><i>${ICON[c.s]}</i><span>${c.t}</span></div>`).join('')}<p class="m">${x('hf')}</p></div><button class="btn" onclick="$('sheet').style.display='none'">${x('cl')}</button>`;$('sheet').style.display='flex'}
+$('scs').innerHTML=D.apps.map(a=>`<button class="sc" data-k="${a.id}" onclick="fresh(D.apps.find(y=>y.id=='${a.id}'))"><b>${a.id} ${a.name}</b><span>${TAGS[a.id]} · ${a.emp} staff · ${a.city}</span></button>`).join('');
+const refLink=()=>'accelbiz.example/r/'+S.a.id+'-'+(S.a.name.length*37+S.a.emp*11).toString(36).toUpperCase();
+function refShare(){tap();S.rec.ref++;S.rfn=1;const u=window.open('https://wa.me/?text='+encodeURIComponent(x('rfm','https://'+refLink())),'_blank');render()}
+function refCopy(){tap();try{navigator.clipboard.writeText('https://'+refLink()).catch(()=>{})}catch(e){}if(!S.rfn)S.rec.ref++;S.rfn=1;render()}
+function stallCheck(){if(!S||!S.t0||S.paid||S.stalled||$('sheet').style.display=='flex'||!['price','consent','kyc','pay'].includes(S.scr)||(S.scr=='kyc'&&S.run>0&&S.run<checks().length))return;if(Date.now()-S.last>=STALL*1000){S.stalled=1;help('stall')}}
+setInterval(stallCheck,1000);addEventListener('click',()=>{if(S)S.last=Date.now()},true);addEventListener('input',()=>{if(S)S.last=Date.now()},true);
+function showM(){const L=Object.values(M).filter(r=>r.started),n=L.length,o=L.filter(r=>r.paid),h=L.filter(r=>r.ho.length),pc=(a,b)=>b?Math.round(a/b*1000)/10+'%':'–',avg=a=>a.length?Math.round(a.reduce((s,v)=>s+v,0)/a.length*10)/10:'–',
+ selfServed=o.filter(r=>!r.ho.length).length,cost=o.length?Math.round((selfServed*1100+(o.length-selfServed)*4000)/o.length):null,
+ out=r=>r.paid?'Ordered':r.ho.length?'With agent':'Not finished',nm={ask:'owner asked',fail:'failed twice',gst:'GST-only add-on, no GST',stall:'stalled'};
+ $('mxb').innerHTML=`<div class="row"><h2 style="margin:0">Pilot metrics</h2><button class="sb" style="width:auto;margin:0;padding:6px 12px" onclick="$('mx').style.display='none'">Close</button></div>
+ <p class="m">Measured live from the ${n} journey${n==1?'':'s'} run in this browser tab (latest run per applicant). The 12 applicants are scripted samples, so these show how the dashboard works, not a conversion forecast. Baselines and targets are the deck's (slides 2 and 8).</p>
+ <div class="kp"><div>Started<b>${n}</b></div><div>Verified<b>${L.filter(r=>r.ver).length}</b></div><div>Ordered<b>${o.length}</b></div><div>Handed to a person<b>${h.length}</b></div><div>Referral links shared<b>${L.reduce((s,r)=>s+r.ref,0)}</b></div></div>
+ <table><tr><th>Measure</th><th>This demo</th><th>Today</th><th>Pilot target</th></tr>
+ <tr><td>Conversion (ordered ÷ started)</td><td><b>${pc(o.length,n)}</b></td><td>11.1%</td><td>15.7%</td></tr>
+ <tr><td>Order to go live (install days + chosen slot)</td><td><b>${avg(o.map(r=>r.golive))}</b></td><td>n/a (today's 16.9 days runs from first contact)</td><td>7 or fewer</td></tr>
+ <tr><td>First tap to order (average, mm:ss)</td><td><b>${(()=>{const v=o.map(r=>r.secs);if(!v.length)return'–';const m=Math.round(v.reduce((s,y)=>s+y,0)/v.length);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')})()}</b></td><td>3 to 5 days to a quote</td><td>about 10 minutes</td></tr>
+ <tr><td>Follow-up calls per journey (a hand-off = 1 call)</td><td><b>${n?Math.round(h.reduce((s,r)=>s+r.ho.length,0)/n*10)/10:'–'}</b></td><td>3.1</td><td>1 or fewer</td></tr>
+ <tr><td>Median time to order (mm:ss)</td><td><b>${(()=>{const v=o.map(r=>r.secs).sort((a,b)=>a-b);if(!v.length)return'–';const m=v[Math.floor(v.length/2)];return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')})()}</b></td><td>days (17.6 to go live)</td><td>about 10 minutes</td></tr>
+ <tr><td>Cost per customer won (assumption)</td><td><b>${cost==null?'–':R(cost)}</b></td><td>₹4,000 field to ₹11,100 partner</td><td>toward ₹1,100 referral</td></tr></table>
+ <p class="m">Cost per customer uses the deck's channel costs as assumptions, not measurements: ₹1,100 for an order finished in the app (referral link), ₹4,000 when a person steps in (field sales).</p>
+ <table><tr><th>Applicant</th><th>Outcome</th><th>Time</th><th>Taps</th><th>Person stepped in</th><th>AI advisor</th><th>Referral</th></tr>${L.map(r=>`<tr><td>${r.id} ${esc(r.name)}</td><td>${out(r)}</td><td>${r.paid?String(Math.floor(r.secs/60)).padStart(2,'0')+':'+String(r.secs%60).padStart(2,'0'):'–'}</td><td>${r.taps}</td><td>${r.ho.map(k=>nm[k]).join(', ')||'–'}</td><td>${r.ai==1?'AI':r.ai==2?'offline reader':'–'}</td><td>${r.ref?'shared':'–'}</td></tr>`).join('')||'<tr><td colspan="7" class="m">Run an applicant to see numbers.</td></tr>'}</table>`;$('mx').style.display='flex'}
+function fit(){const k=Math.min(1,(innerHeight-24)/864);$('phone').style.transform=`scale(${k})`;$('wrap').style.height=864*k+'px';$('wrap').style.width=410*k+'px'}
+addEventListener('resize',fit);fit();$('prv').value=PROV;$('key').value=KEY;$('mdl').value=DEFM[PROV];fresh(D.apps.find(a=>a.id=='K03'));
+</script></body></html>
